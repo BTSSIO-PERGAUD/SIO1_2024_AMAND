@@ -111,9 +111,10 @@ if (port == 443) {
     options["cert"] = tlsCrt;
     options["key"] = tlsKey
 };
-const oauth = createHelpers(Object.assign(createGitHubOAuthConfig({
+options.port = "3737";
+const oauth = /*createHelpers(Object.assign(createGitHubOAuthConfig({
     redirectUri: `${port == 443 ? "https" : "http"}://${hostname || "localhost"}:${port}/login/callback`
-}))), app = await (async function () {
+})))*/undefined, app = await (async function () {
     try {
         return (toFileUrl(resolve(await find("app")))).href
     } catch (err) {

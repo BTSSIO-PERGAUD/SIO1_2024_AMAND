@@ -1,6 +1,10 @@
 import toNumber from "isto/to/number";
 import logout from "../logout.GET.esm.jsx";
 export default async function callback () {
+    throw {
+        name: Deno.errors.PermissionDenied.name,
+        status: 401
+    }
     try {
         const {
             response,

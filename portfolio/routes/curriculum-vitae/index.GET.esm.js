@@ -1,5 +1,9 @@
 import resolve from "path/resolve";
 export default async function curriculumVitae () {
+    throw {
+        name: Deno.errors.PermissionDenied.name,
+        status: 401
+    }
     const {
         searchParams
     } = new URL(this.request.url);
