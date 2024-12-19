@@ -1,2 +1,6 @@
 .env
 deno.lock
+PORTFOLIO
+PORTFOLIO-shm
+PORTFOLIO-wal
+assets/private

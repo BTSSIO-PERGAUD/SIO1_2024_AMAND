@@ -1,3 +1,7 @@
 export default async function logout () {
-    return await this.oauth.signOut(this.request)
+    if (typeof (this?.oauth) != "undefined") return await this.oauth.signOut(this.request)
+    else throw {
+        name: Deno.errors.NotSupported.name,
+        status: 501
+    }
 }

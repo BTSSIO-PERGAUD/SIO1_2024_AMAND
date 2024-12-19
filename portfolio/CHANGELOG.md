@@ -6,6 +6,9 @@
             <li>Ajout de plusieurs dossiers/fichiers :
                 <ul>
                     <li>
+                        <a href="./assets">assets</a>
+                    </li>
+                    <li>
                         <a href="./libraries">libraries</a>
                     </li>
                     <li>

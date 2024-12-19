@@ -1,22 +1,10 @@
 import resolve from "path/resolve";
 export default async function curriculumVitae () {
-    throw {
-        name: Deno.errors.PermissionDenied.name,
-        status: 401
-    }
-    const {
-        searchParams
-    } = new URL(this.request.url);
-    return new Response((await Deno.open(resolve(`./${Deno.env.get("CURRICULUM_VITAE")}${(await (async () => {
-        try {
-            return (await this.kv.get(["PORTFOLIO", "cv", searchParams.get("access")]))?.value
-        } catch (error) {
-            return false
-        }
-    })()) != true ? ".public" : ""}.pdf`))).readable, Object.assign(this.responseOptions, {
-        headers: Object.assign(this.responseOptions.headers, {
+    console.log("curriculumVitae!");
+    return new Response((await Deno.open(resolve(`./assets${this.authorizedAccess == true ? "/private" : ""}/pdf/AMAND Alexandre - CV.pdf`))).readable, Object.assign(this.responseOptions, {
+        headers: Object.assign(Object.fromEntries(this.responseOptions.headers.entries()), {
             "Content-Type": "application/pdf",
-            "Content-Disposition": `inline; filename=\"${Deno.env.get("CURRICULUM_VITAE")}.pdf\"`
+            "Content-Disposition": `inline; filename=\"AMAND Alexandre - CV.pdf\"`
         })
     }))
 }

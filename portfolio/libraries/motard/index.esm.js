@@ -268,12 +268,27 @@ export default async function motard (url, method) {
                         } of Deno.readDir(path.slice(0, path.lastIndexOf(separator)))) {
                             const type = isFile == true ? "file" : isDirectory == true ? "directory" : undefined;
                             if (checkEntry(entryName, method, type, pureName)) return [entryName, type, []]
-                            else {
+                        };
+                        for await (const {
+                            isFile,
+                            isDirectory,
+                            name: entryName
+                        } of Deno.readDir(path.slice(0, path.lastIndexOf(separator)))) {
+                            const type = isFile == true ? "file" : isDirectory == true ? "directory" : undefined;
+                            if (!checkEntry(entryName, method, type, pureName)) {
                                 beforeExtension = entryName.replace(/(?<!\[)\[(\.\.\.\w+)](?!\])/g, "").indexOf(".");
-                                const name = beforeExtension > 0 ? entryName.slice(0, beforeExtension) : entryName, param = [/(?<!\[)\[(\.\.\.\w+)](?!\])/g.exec(name), /\[(\w+)]/g.exec(name)].find(function (regexp) {
+                                const name = beforeExtension > 0 ? entryName.slice(0, beforeExtension) : entryName, paramReg = [/(?<!\[)\[(\.\.\.\w+)](?!\])/g.exec(name), /\[(\w+)]/g.exec(name)].find(function (regexp) {
+                                    return isArray(regexp) == true
+                                });
+                                let param = (paramReg != null ? (name.match(new RegExp(pureName.slice(0, paramReg.index) + "(.+)" + pureName.slice(((paramReg.index + ((paramReg[1]).length + 1)) + 1)))))?.[1] : undefined);
+                                param = [/(?<!\[)\[(\.\.\.\w+)](?!\])/g.exec(param), /\[(\w+)]/g.exec(param)].find(function (regexp) {
                                     return isArray(regexp) == true
                                 })?.[1];
+                                /*console.log("motard:", {
+                                    name, pureName, paramReg, value: paramReg?.[1], param, slice: name.slice(0, paramReg.index) + "(.+)" + name.slice(((paramReg.index + ((paramReg[1]).length + 1)) + 1))
+                                });*/
                                 if (isString(param) == true) {
+                                    //console.log(name, pureName.slice(0, paramReg.index) + "(.+)" + pureName.slice(((paramReg.index + ((paramReg[1]).length + 1)) + 1)));
                                     beforeExtension = param.lastIndexOf(".");
                                     const catchAll = beforeExtension > 0;
                                     if (checkEntry(entryName, method, type) == true) {
