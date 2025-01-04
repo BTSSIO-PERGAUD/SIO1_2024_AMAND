@@ -20,12 +20,12 @@ export default async function repository () {
             });
             if (repo) return (value => {
                 return pathname.startsWith(`/${repo.name.toLowerCase()}`) == true || pathname.startsWith(`/@${user.name.toLowerCase()}/${repo.name.toLowerCase()}`) == true ? (
-                    <div class="pure-g">
-                        <div class="pure-u-1-3">
-                            <img src={user.avatar_url} alt={`Avatar de ${user.name}`} />
-                            <h3>{user.name}</h3>
+                    <div className="container" style="background-color: transparent;padding: 0;flex-direction: column;">
+                        <div className="picture-and-name" style="margin-bottom: 2rem">
+                            <a href={user.html_url} target="_blank"><img src={user.avatar_url} alt={`Avatar de ${user.name}`} style="max-width: 275px" /></a>
+                            <h1>{user.name}</h1>
                         </div>
-                        <div class="pure-u-2-3">{value}</div>
+                        <div className="cards">{value}</div>
                     </div>
                 ) : value
             })((
@@ -47,11 +47,10 @@ export default async function repository () {
             ))
             else throw undefined
         } catch (error) {
-            console.error(error);
-            /*throw {
+            throw {
                 name: Deno.errors.NotFound.name,
                 status: 404
-            }*/
+            }
         }
     })()
 }

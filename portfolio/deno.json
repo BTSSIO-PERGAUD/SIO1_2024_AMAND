@@ -10,6 +10,7 @@
         "isto/is/boolean": "./libraries/isto/is/boolean/index.esm.js",
         "isto/is/number": "./libraries/isto/is/number/index.esm.js",
         "isto/is/object": "./libraries/isto/is/object/index.esm.js",
+        "isto/is/port": "./libraries/isto/is/port/index.esm.js",
         "isto/is/string": "./libraries/isto/is/string/index.esm.js",
         "isto/is/url": "./libraries/isto/is/url/index.esm.js",
         "isto/to": "./libraries/isto/to/index.esm.js",
@@ -36,6 +37,7 @@
         "mapper": "./libraries/mapper/index.esm.js",
         "re-watcher": "./libraries/re-watcher/index.esm.js",
         "un-ino": "./libraries/un-ino/index.esm.js",
+        "ready-to-listen": "./libraries/ready-to-listen/index.esm.js",
         "logger": "./libraries/logger/nope-index.esm.js",
         "kv-oauth": "jsr:@deno/kv-oauth@0.11.0",
         "cookie": "jsr:@std/http@1.0.12/cookie",
@@ -43,7 +45,8 @@
         "preact/": "https://esm.sh/preact@10.25.0/",
         "preact-render-to-string": "https://esm.sh/preact-render-to-string@6.5.11",
         "deno-dom": "jsr:@b-fuze/deno-dom@0.1.48",
-        "encoding/base64": "jsr:@std/encoding@1.0.5/base64"
+        "encoding/base64": "jsr:@std/encoding@1.0.5/base64",
+        "denomailer": "https://deno.land/x/denomailer@1.6.0/mod.ts"
     },
     "compilerOptions": {
         "lib": [
@@ -60,6 +63,6 @@
     "unstable": ["kv", "ffi"],
     "tasks": {
         "start": "deno run --env-file ./main.esm.js",
-        "dev": "deno run -A --env-file --watch=./libraries/,./routes/ ./main.esm.js"
+        "dev": "deno run -A --env-file --watch=./libraries/,./routes/ --watch-exclude=./routes/previews ./main.esm.js"
     }
 }

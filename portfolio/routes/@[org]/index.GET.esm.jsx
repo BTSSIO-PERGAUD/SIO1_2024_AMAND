@@ -38,7 +38,7 @@ export default async function organisation () {
                 return (
                     <div className="container" style="background-color: transparent;padding: 0">
                         <div className="picture-and-name" style="margin-bottom: 2rem">
-                            <a href={user.html_url} target="_blank"><img src={user.avatar_url} alt={`Avatar de ${user.name}`} style="max-width: 275px;width: 275px" /></a>
+                            <a href={user.html_url} target="_blank"><img src={user.avatar_url} alt={`Avatar de ${user.name}`} style="max-width: 275px" /></a>
                             <h1>{user.name}</h1>
                         </div>
                         <div className="cards">{value}</div>
@@ -58,7 +58,7 @@ export default async function organisation () {
                 return (
                     <div className="container" style="background-color: transparent;padding: 0;flex-direction: column;">
                         <div className="picture-and-name" style="margin-bottom: 2rem">
-                            <a href={user.html_url} target="_blank"><img src={user.avatar_url} alt={`Avatar de ${user.name}`} style="max-width: 275px;width: 275px" /></a>
+                            <a href={user.html_url} target="_blank"><img src={user.avatar_url} alt={`Avatar de ${user.name}`} style="max-width: 275px" /></a>
                             <h1>{user.name}</h1>
                         </div>
                         <div className="cards">{await Promise.all(user.repos.map(async ({

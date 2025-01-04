@@ -4,6 +4,7 @@
   This Source Code Form is "Incompatible With Secondary Licenses", as
   defined by the Mozilla Public License, v. 2.0.*/
 import isString from "isto/is/string";
+Function.prototype.toJSON = Function.prototype.toString;
 /**
  * @module isto/to/string
  * @name isto/to/string

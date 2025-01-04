@@ -34,6 +34,7 @@ export default function technologyWatch () {
                     ["Socket Supply","/technology-watch/socket_supply.svg", "https://socketsupply.co"],
                     ["Ventoy", "/technology-watch/ventoy.png", "https://www.ventoy.net"],
                     ["ReactOS", "/technology-watch/reactos.png", "https://reactos.org"],
+                    ["Menyr", "/technology-watch/menyr.jpg", "https://menyr.nogstudio.com"],
                     ["Gaming / Modding", "/technology-watch/gaming_modding.jpg", "https://www.moddb.com"],
                     ["Open Source", "/technology-watch/open_source.jpg", "https://opensource.org"]
                 ].map(function ([name, picture, link]) {

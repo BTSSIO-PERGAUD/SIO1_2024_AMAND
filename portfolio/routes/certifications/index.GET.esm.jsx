@@ -99,6 +99,7 @@ export default async function certifications () {
 export default function certifications() {
     return (
         <div className="container" style="background-color: transparent;padding: 0;flex-direction: column">
+            <p>M.O.O.C. = <a className="link" href="https://www.francetravail.fr/actualites/le-dossier/pratique/formation/les-moocs-en-pratique.html" target="_blank">Massive Open Online Course ou Cours en Ligne Ouverts et Massifs (C.L.O.M.)</a></p>
             <div className="cards">
                 {[
                     ["MOOC SecNum Académie par L'ANSSI", "/certifications/mooc/anssi/secnumacademie/preview.png", "https://secnumacademie.gouv.fr", [

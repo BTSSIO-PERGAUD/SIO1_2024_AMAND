@@ -31,6 +31,9 @@ export {
     default as object
 } from "isto/is/object";
 export {
+    default as port
+} from "isto/is/port";
+export {
     default as string
 } from "isto/is/string";
 export {

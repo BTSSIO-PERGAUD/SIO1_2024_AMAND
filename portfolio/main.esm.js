@@ -19,17 +19,22 @@ import toString from "isto/to/string";
 import isString from "isto/is/string";
 import isNumber from "isto/is/number";
 import separator from "path/utils/separator.esm.js";
+import readyToListen from "ready-to-listen";
 import {
     createGitHubOAuthConfig,
     createHelpers
 } from "kv-oauth";
 import {
     setCookie,
+    getSetCookies,
     getCookies
 } from "cookie";
 import {
     DOMParser
 } from "deno-dom";
+import {
+    SMTPClient
+ } from "denomailer";
 Deno.dev = (toString(Deno.env.get("DENO_ENV"))).toLowerCase() != "production", Deno.errors.keys = Object.keys(Deno.errors);
 function send (data, extension, status, hdrs = headers) {
     let bag;
@@ -71,8 +76,34 @@ async function find (status) {
     if (isError == true) return await find()
     else throw undefined
 };
-const kv = (function (kv) {
+const smtp = (function () {
+    try {
+        const host = (function () {
+            try {
+                return new URL(`http://${Deno.env.get("SMTP_HOST") || ""}`)
+            } catch (err) {
+                return undefined
+            }
+         })();
+         return new SMTPClient({
+            connection: {
+                hostname: host?.hostname,
+                port: toNumber(host?.port, {
+                    default: false
+                }),
+                tls: true,
+                auth: {
+                    username: (Deno.env.get("SMTP_AUTH_USERNAME") || ""),
+                    password: (Deno.env.get("SMTP_AUTH_PASSWORD") || "")
+                }
+            }
+         })
+    } catch (err) {
+        return undefined
+    }
+})(), kv = (function (kv) {
     addEventListener("beforeunload", async function () {
+        await smtp?.close?.();
         return await kv.close()
     });
     return kv
@@ -125,8 +156,8 @@ let headers = new Headers({
 };
 if (isString(hostname) == true) options["hostname"] = hostname
 if (port == 443) {
-    options["cert"] = tlsCrt;
-    options["key"] = tlsKey
+    options["cert"] = await Deno.readTextFile(tlsCrt);
+    options["key"] = await Deno.readTextFile(tlsKey)
 };
 const oauth = (function () {
     try {
@@ -154,12 +185,12 @@ async function jsImport ({
 }) {
     try {
         let responseOptions = {
-            headers
+            headers: new Headers(headers)
         };
         if (isNumber(this?.status, {
             onlyPositive: true
         }) == true) responseOptions["status"] = this?.status
-        const access = (function () {
+        const access = (() => {
             try {
                 return new URL(this.request.url).searchParams.get("access")
             } catch (error) {
@@ -171,21 +202,23 @@ async function jsImport ({
             value: access,
             maxAge: 604800
         })
-        const authorizedAccess = (await (async () => {
+        this.responseOptions = responseOptions;
+        this.kv = kv;
+        this.oauth = oauth;
+        this.authorizedAccess = (await (async () => {
             try {
-                return (await kv.get(["PORTFOLIO", "access", getCookies(this.request.headers)?.["access"] || getCookies(responseOptions.headers)?.["access"]])).value
+                return (await kv.get(["PORTFOLIO", "access", (getSetCookies(responseOptions?.headers)?.findLast?.(function (cookie) {
+                    return cookie?.name == "access"
+                })?.value || getCookies(responseOptions?.headers)?.["access"] || getSetCookies(this?.request?.headers)?.findLast?.(function (cookie) {
+                    return cookie?.name == "access"
+                })?.value || getCookies(this?.request?.headers)?.["access"])])).value
             } catch (error) {
                 return false
             }
-        })()) === true, data = await def.call({
-            request: this?.request,
-            params: this?.params,
-            responseOptions,
-            kv,
-            oauth,
-            authorizedAccess,
-            DOMParser
-        });
+        })()) === true;
+        this.DOMParser = DOMParser;
+        this.smtp = smtp;
+        const data = await def.call(this);
         return (data instanceof Response) == true ? data : [["type", "props"], ["head", "body"]].some(function (properties) {
             try {
                 return properties.every(function (property) {
@@ -199,13 +232,7 @@ async function jsImport ({
                 return await import(app).then(async ({
                     default: defApp
                 }) => {
-                    const appData = await defApp.call({
-                        request: this?.request,
-                        params: this?.params,
-                        responseOptions,
-                        kv,
-                        oauth
-                    }, data);
+                    const appData = await defApp.call(this, data);
                     return (appData instanceof Response) == true ? appData : [["type", "props"], ["head", "body"]].some(function (properties) {
                         try {
                             return properties.every(function (property) {
